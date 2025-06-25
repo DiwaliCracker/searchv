@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Search</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      background: radial-gradient(circle at 30% 30%, #1f1c2c, #928dab);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .search-container {
+      position: relative;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 40px;
+      padding: 30px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+      backdrop-filter: blur(20px);
+      z-index: 2;
+    }
+
+    h1 {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 20px;
+      font-size: 28px;
+      text-shadow: 0 0 5px #000;
+    }
+
+    form {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 14px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 30px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      transition: 0.3s;
+    }
+
+    input[type="text"]::placeholder {
+      color: #ccc;
+    }
+
+    button {
+      padding: 12px 22px;
+      background: #ffcc00;
+      border: none;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #000;
+      transition: 0.3s ease;
+      box-shadow: 0 0 10px #ffcc00a8;
+    }
+
+    button:hover {
+      background: #e6b800;
+      transform: scale(1.05);
+    }
+
+    /* Bubble background animation */
+    .bubbles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bubble {
+      position: absolute;
+      bottom: -150px;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      animation: rise 10s infinite ease-in;
+    }
+
+    .bubble:nth-child(2) { width: 25px; height: 25px; left: 10%; animation-duration: 12s; }
+    .bubble:nth-child(3) { width: 50px; height: 50px; left: 20%; animation-duration: 10s; }
+    .bubble:nth-child(4) { width: 20px; height: 20px; left: 40%; animation-duration: 8s; }
+    .bubble:nth-child(5) { width: 35px; height: 35px; left: 60%; animation-duration: 14s; }
+    .bubble:nth-child(6) { width: 45px; height: 45px; left: 80%; animation-duration: 11s; }
+
+    @keyframes rise {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 0;
+      }
+      50% {
+        opacity: 0.4;
+      }
+      100% {
+        transform: translateY(-1000px) scale(1.5);
+        opacity: 0;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="search-container">
+  <h1>🔍Search</h1>
+  <form action="https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/svscript.html" method="GET" id="searchForm">
+    <input type="text" name="q" id="searchInput" placeholder="Search..." required />
+    <button type="submit">Search</button>
+  </form>
+</div>
+
+<!-- Floating bubbles -->
+<div class="bubbles">
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+  <div class="bubble"></div>
+</div>
+
+</body>
+</html>

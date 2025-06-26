@@ -136,19 +136,75 @@
     .actor-list a:hover {
       text-decoration: underline;
     }
+    .sort-options {
+  text-align: center;
+  margin: 20px 0;
+}
+#sortSelect {
+  padding: 6px 12px;
+  font-size: 16px;
+  border-radius: 6px;
+  background: #141e30;
+  color: #fff;
+  border: 1px solid #555;
+  transition: all 0.3s ease;
+}
+#sortSelect:hover {
+  background: #243b55;
+  color: #ffcc00;
+}
+
   </style>
 </head>
 <body>
 
 <h1>Search Results</h1>
+<div class="sort-options">
+  <select id="sortSelect">
+    <option value="default">Default</option>
+    <option value="recent">Recent</option>
+    <option value="popular">Popular</option>
+    <option value="random">Random</option>
+  </select>
+</div>
+
 <div class="posters" id="results-container"></div>
 
   <script>
    const query = new URLSearchParams(window.location.search).get("q")?.toLowerCase() || "";
 const pages = [
-  "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pkk2.html", "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pvv.html", "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pil.html", "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pjs.html"
-]; // You can keep adding more HTML files here
-
+  "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pkk2.html", "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pvv.html", "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pil.html", "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pjs.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/psr.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pmm1.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/prf.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pdd1.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pabp.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pjr.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pam.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/plp.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/phr.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pkrrisyl.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pis.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pkk.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pej.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pec.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pew.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/paja1.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pcp.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/prs.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pjk.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pkt.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pjj.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pjl.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pek.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pbb.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pcg.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/paa.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pkalir.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pkj.html",
+   "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/ps.html",
+   ""
+,]; // You can keep adding more HTML files here
 const resultsContainer = document.getElementById("results-container");
 
 async function fetchAndExtractSections(pageUrl) {
@@ -264,18 +320,46 @@ anchor.addEventListener("mouseleave", () => {
   const fetchPromises = pages.map(fetchAndExtractSections);
   const allResults = await Promise.all(fetchPromises);
 
-  allResults.flat().forEach(section => {
-    section.items.forEach(item => {
-      const combined = `${item.name} ${item.altname} ${item.actors?.map(a => a.name).join(" ")}`.toLowerCase();
-      if (combined.includes(query)) {
-        createPoster(item);
-      }
-    });
+ const flatItems = [];
+
+allResults.flat().forEach(section => {
+  section.items.forEach(item => {
+    const combined = `${item.name} ${item.altname} ${item.actors?.map(a => a.name).join(" ")}`.toLowerCase();
+    if (combined.includes(query)) {
+      flatItems.push(item);
+    }
   });
+});
+
+function sortAndDisplayItems(mode = "default") {
+  resultsContainer.innerHTML = "";
+  let sortedItems = [...flatItems];
+
+  if (mode === "recent") {
+    // Sort by assumption of recent (e.g., newer first if available)
+    sortedItems = sortedItems.reverse(); // assuming order is recent
+  } else if (mode === "popular") {
+    sortedItems = sortedItems.sort((a, b) => (b.clicks || 0) - (a.clicks || 0));
+  } else if (mode === "random") {
+    sortedItems = sortedItems.sort(() => Math.random() - 0.5);
+  }
+
+  sortedItems.forEach(createPoster);
+}
+
+sortAndDisplayItems(); // Initial load
+
+document.getElementById("sortSelect").addEventListener("change", (e) => {
+  sortAndDisplayItems(e.target.value);
+});
+
+
+  // ✅ Now load alternate HTML-style anchors also
+  await fetchAdditionalHtmlAnchors(query, pages);
 })();
 
 </script>
-
+<script src="searchdemoscript2.js"></script>
 </body>
 </html>
 

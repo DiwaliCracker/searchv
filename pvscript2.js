@@ -75,38 +75,6 @@ async function fetchAdditionalHtmlAnchors(query, pageUrls) {
         loadingBar.style.width = "0%";
         video.src = videoSrc;
         video.load();
-        // Add play button overlay on mobile
-const playBtn = document.createElement("div");
-playBtn.textContent = "▶ Play";
-playBtn.style.position = "absolute";
-playBtn.style.top = "50%";
-playBtn.style.left = "50%";
-playBtn.style.transform = "translate(-50%, -50%)";
-playBtn.style.color = "white";
-playBtn.style.fontSize = "20px";
-playBtn.style.padding = "6px 12px";
-playBtn.style.background = "rgba(0, 0, 0, 0.6)";
-playBtn.style.borderRadius = "5px";
-playBtn.style.display = "none";
-playBtn.style.zIndex = "10";
-cloned.appendChild(playBtn);
-
-// Detect mobile device
-const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-
-if (isMobile) {
-  playBtn.style.display = "block";
-
-  playBtn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    playBtn.style.display = "none";
-    video.src = videoSrc;
-    video.load();
-    video.currentTime = 0;
-    video.play();
-  });
-}
-
         video.currentTime = 0;
         video.play();
       }, 500);

@@ -106,28 +106,23 @@ const useCorsProxy = (url) => {
   return url;
 };
 
-async function fetchAndExtractSections(pageUrl) {
+for (const pageUrl of pageUrls) {
   try {
-    const proxiedUrl = useCorsProxy(pageUrl);
-    const res = await fetch(proxiedUrl);
-    const text = await res.text();
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(pageUrl)}`;
+    const res = await fetch(proxyUrl);
+    const data = await res.json();
+    const html = data.contents;
 
-    if (pageUrl.endsWith(".txt")) {
-      // ✅ .txt files are JSON-style
-      return JSON.parse(text);
-    }
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const anchors = doc.querySelectorAll('div.posters > a');
 
-    // ✅ .html files have embedded JS arrays
-    const match = text.match(/const sections\s*=\s*(\[[\s\S]*?\]);/);
-    if (match && match[1]) {
-      const json = new Function("return " + match[1])();
-      return json;
-    }
-  } catch (e) {
-    console.error("Failed to load", pageUrl, e);
+    // ... rest of your anchor cloning logic here
+
+  } catch (err) {
+    console.error('Failed to fetch or parse via proxy:', pageUrl, err);
   }
-  return [];
 }
+
 
 function createPoster(item) {
   const wrapper = document.createElement("div");

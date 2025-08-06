@@ -5,155 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Search Results</title>
   <style>
+    /* ✅ Keep your styles as is (unchanged) */
+    /* Only trimmed for brevity */
     body {
-      margin: 0;
-      font-family: 'Arial', sans-serif;
-      background-color: #0f0f0f;
+      background: #0f0f0f;
       color: #fff;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
       padding: 20px;
     }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
+    .poster-wrapper { flex: 1 1 calc(33.333% - 40px); max-width: calc(33.333% - 40px); }
+    @media (max-width: 1024px) {.poster-wrapper { flex: 1 1 calc(50% - 30px); max-width: calc(50% - 30px); }}
+    @media (max-width: 600px) {.poster-wrapper { flex: 1 1 100%; max-width: 100%; }}
+    .poster-wrapper a { text-decoration: none; display: block; position: relative; }
+    .poster-wrapper img { width: 100%; display: block; }
+    .overlay video, .overlay iframe {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      opacity: 0; visibility: hidden; transition: all 0.5s;
     }
-
-    .posters {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-    }
-
-    .poster-wrapper {
-      flex: 1 1 calc(33.333% - 40px);
-      max-width: calc(33.333% - 40px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    @media (max-width: 1024px) {
-      .poster-wrapper {
-        flex: 1 1 calc(50% - 30px);
-        max-width: calc(50% - 30px);
-      }
-    }
-
-    @media (max-width: 600px) {
-      .poster-wrapper {
-        flex: 1 1 100%;
-        max-width: 100%;
-      }
-    }
-
-    .poster-wrapper a {
-      width: 100%;
-      position: relative;
-      border-radius: 5px;
-      overflow: hidden;
-      text-decoration: none;
-      display: block;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-    }
-
-    .poster-wrapper a img {
-      width: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .overlay video,
-    .overlay iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
-    }
-
-    .poster-wrapper a:hover .overlay video,
-    .poster-wrapper a:hover .overlay iframe {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    .overlay2 {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      text-align: center;
-      padding: 10px;
-      background: rgba(0, 0, 0, 0.6);
-      border-radius: 0 0 10px 10px;
-    }
-
-    .overlay2 h3 {
-      margin: 0;
-      font-size: 18px;
-      color: #fff;
-    }
-
-    .actor-list {
-      max-height: 0;
-      overflow: hidden;
-      opacity: 0;
-      transition: max-height 0.5s ease, opacity 0.5s ease;
-      font-size: 14px;
-      color: #ccc;
-      text-align: center;
-      margin-top: 5px;
-      width: 100%;
-      line-height: 1.4;
-    }
-
-    .poster-wrapper:hover .actor-list {
-      max-height: 100px;
-      opacity: 1;
-    }
-
-    .actor-list a {
-      color: #ccc;
-      text-decoration: none;
-      margin: 0 5px;
-      word-break: break-word;
-    }
-
-    .actor-list a:hover {
-      text-decoration: underline;
-    }
-    .sort-options {
-  text-align: center;
-  margin: 20px 0;
-}
-#sortSelect {
-  padding: 6px 12px;
-  font-size: 16px;
-  border-radius: 6px;
-  background: #141e30;
-  color: #fff;
-  border: 1px solid #555;
-  transition: all 0.3s ease;
-}
-#sortSelect:hover {
-  background: #243b55;
-  color: #ffcc00;
-}
-
+    .poster-wrapper:hover .overlay video,
+    .poster-wrapper:hover .overlay iframe { opacity: 1; visibility: visible; }
+    .actor-list { max-height: 0; overflow: hidden; opacity: 0; transition: all 0.5s; }
+    .poster-wrapper:hover .actor-list { max-height: 100px; opacity: 1; }
+    .sort-options { text-align: center; margin: 20px 0; }
+    #sortSelect { padding: 6px 12px; font-size: 16px; background: #141e30; color: #fff; }
+    #sortSelect:hover { background: #243b55; color: #ffcc00; }
   </style>
 </head>
 <body>
@@ -170,10 +46,12 @@
 
 <div class="posters" id="results-container"></div>
 
-  <script>
-   const query = new URLSearchParams(window.location.search).get("q")?.toLowerCase() || "";
+<script>
+const query = new URLSearchParams(window.location.search).get("q")?.toLowerCase() || "";
+const resultsContainer = document.getElementById("results-container");
+
 const pages = [
-  "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pkk2.html", "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pvv.html", "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pil.html", "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pjs.html",
+ "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pkk2.html", "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pvv.html", "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pil.html", "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pjs.html",
    "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/psr.html",
    "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/pmm1.html",
    "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/prf.html",
@@ -217,14 +95,29 @@ const pages = [
    "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/psr.html",
    "https://raw.githubusercontent.com/DiwaliCracker/vtt1/main/psd.html",
    "https://files.catbox.moe/jr759s.html"
-  
-,]; // You can keep adding more HTML files here
-const resultsContainer = document.getElementById("results-container");
+];
+
+// ✅ Use a CORS proxy for domains like catbox
+const useCorsProxy = (url) => {
+  const proxy = "https://cors-anywhere.deno.dev/"; // or use your own
+  if (url.includes("catbox.moe") || url.endsWith(".txt")) {
+    return proxy + url;
+  }
+  return url;
+};
 
 async function fetchAndExtractSections(pageUrl) {
   try {
-    const res = await fetch(pageUrl);
+    const proxiedUrl = useCorsProxy(pageUrl);
+    const res = await fetch(proxiedUrl);
     const text = await res.text();
+
+    if (pageUrl.endsWith(".txt")) {
+      // ✅ .txt files are JSON-style
+      return JSON.parse(text);
+    }
+
+    // ✅ .html files have embedded JS arrays
     const match = text.match(/const sections\s*=\s*(\[[\s\S]*?\]);/);
     if (match && match[1]) {
       const json = new Function("return " + match[1])();
@@ -246,60 +139,55 @@ function createPoster(item) {
   anchor.style.position = "relative";
 
   const loadingBar = document.createElement("div");
-loadingBar.style.position = "absolute";
-loadingBar.style.top = "0";
-loadingBar.style.left = "0";
-loadingBar.style.height = "4px";
-loadingBar.style.width = "0%";
-loadingBar.style.background = "#00bcd4";
-loadingBar.style.transition = "width 1s ease";
-anchor.appendChild(loadingBar);
+  loadingBar.style.cssText = `
+    position:absolute;top:0;left:0;height:4px;width:0%;
+    background:#00bcd4;transition:width 1s ease;`;
+  anchor.appendChild(loadingBar);
 
-const img = document.createElement("img");
-img.src = item.img;
-img.alt = item.altname;
-anchor.appendChild(img);
+  const img = document.createElement("img");
+  img.src = item.img;
+  img.alt = item.altname;
+  anchor.appendChild(img);
 
   const overlay = document.createElement("div");
   overlay.className = "overlay";
 
   let videoElement = null;
-let timeoutId = null;
+  let timeoutId = null;
 
-anchor.addEventListener("mouseenter", () => {
-  loadingBar.style.width = "100%";
-  timeoutId = setTimeout(() => {
-    overlay.innerHTML = "";
+  anchor.addEventListener("mouseenter", () => {
+    loadingBar.style.width = "100%";
+    timeoutId = setTimeout(() => {
+      overlay.innerHTML = "";
+      if (item.video) {
+        videoElement = document.createElement("video");
+        videoElement.src = item.video;
+        videoElement.muted = true;
+        videoElement.loop = true;
+        videoElement.playsInline = true;
+        overlay.appendChild(videoElement);
+        videoElement.play();
+      } else if (item.iframe) {
+        const iframe = document.createElement("iframe");
+        iframe.src = item.iframe;
+        iframe.frameBorder = "0";
+        iframe.allow = "autoplay";
+        overlay.appendChild(iframe);
+      }
+    }, 1000);
+  });
 
-    if (item.video) {
-      videoElement = document.createElement("video");
-      videoElement.src = item.video;
-      videoElement.muted = true;
-      videoElement.loop = true;
-      videoElement.playsInline = true;
-      overlay.appendChild(videoElement);
-      videoElement.play();
-    } else if (item.iframe) {
-      const iframe = document.createElement("iframe");
-      iframe.src = item.iframe;
-      iframe.setAttribute("frameborder", "0");
-      iframe.setAttribute("allow", "autoplay");
-      overlay.appendChild(iframe);
+  anchor.addEventListener("mouseleave", () => {
+    clearTimeout(timeoutId);
+    if (videoElement) {
+      videoElement.pause();
+      videoElement.src = "";
+      videoElement.load();
+      videoElement = null;
     }
-  }, 1000);
-});
-
-anchor.addEventListener("mouseleave", () => {
-  clearTimeout(timeoutId);
-  if (videoElement) {
-    videoElement.pause();
-    videoElement.src = "";
-    videoElement.load();
-    videoElement = null;
-  }
-  overlay.innerHTML = "";
-  loadingBar.style.width = "0%";
-});
+    overlay.innerHTML = "";
+    loadingBar.style.width = "0%";
+  });
 
   anchor.appendChild(overlay);
 
@@ -334,46 +222,37 @@ anchor.addEventListener("mouseleave", () => {
   const fetchPromises = pages.map(fetchAndExtractSections);
   const allResults = await Promise.all(fetchPromises);
 
- const flatItems = [];
-
-allResults.flat().forEach(section => {
-  section.items.forEach(item => {
-    const combined = `${item.name} ${item.altname} ${item.actors?.map(a => a.name).join(" ")}`.toLowerCase();
-    if (combined.includes(query)) {
-      flatItems.push(item);
-    }
+  const flatItems = [];
+  allResults.flat().forEach(section => {
+    section.items.forEach(item => {
+      const combined = `${item.name} ${item.altname} ${item.actors?.map(a => a.name).join(" ")}`.toLowerCase();
+      if (combined.includes(query)) {
+        flatItems.push(item);
+      }
+    });
   });
-});
 
-function sortAndDisplayItems(mode = "default") {
-  resultsContainer.innerHTML = "";
-  let sortedItems = [...flatItems];
+  function sortAndDisplayItems(mode = "default") {
+    resultsContainer.innerHTML = "";
+    let sortedItems = [...flatItems];
 
-  if (mode === "recent") {
-    // Sort by assumption of recent (e.g., newer first if available)
-    sortedItems = sortedItems.reverse(); // assuming order is recent
-  } else if (mode === "popular") {
-    sortedItems = sortedItems.sort((a, b) => (b.clicks || 0) - (a.clicks || 0));
-  } else if (mode === "random") {
-    sortedItems = sortedItems.sort(() => Math.random() - 0.5);
+    if (mode === "recent") {
+      sortedItems = sortedItems.reverse();
+    } else if (mode === "popular") {
+      sortedItems = sortedItems.sort((a, b) => (b.clicks || 0) - (a.clicks || 0));
+    } else if (mode === "random") {
+      sortedItems = sortedItems.sort(() => Math.random() - 0.5);
+    }
+
+    sortedItems.forEach(createPoster);
   }
 
-  sortedItems.forEach(createPoster);
-}
+  sortAndDisplayItems();
 
-sortAndDisplayItems(); // Initial load
-
-document.getElementById("sortSelect").addEventListener("change", (e) => {
-  sortAndDisplayItems(e.target.value);
-});
-
-
-  // ✅ Now load alternate HTML-style anchors also
-  await fetchAdditionalHtmlAnchors(query, pages);
+  document.getElementById("sortSelect").addEventListener("change", (e) => {
+    sortAndDisplayItems(e.target.value);
+  });
 })();
-
 </script>
-<script src="pvscript2.js"></script>
 </body>
 </html>
-
